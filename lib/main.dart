@@ -1,6 +1,9 @@
+import 'package:dev_stories/provider/auth_provider.dart';
 import 'package:dev_stories/style/theme.dart';
 import 'package:dev_stories/style/util.dart';
 import 'package:flutter/material.dart';
+
+import 'db/auth_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,11 +17,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late AuthProvider authProvider;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    final authRepository = AuthRepository();
+    authProvider = AuthProvider(authRepository);
+
   }
 
   @override

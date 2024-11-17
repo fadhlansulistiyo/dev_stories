@@ -9,17 +9,64 @@ class AuthProvider extends ChangeNotifier {
 
   bool isLoggedIn = false;
   bool isLoadingLogin = false;
-  bool isLoadingRegister = false;
   bool isLoadingLogout = false;
+  bool isLoadingRegister = false;
+  String? message;
 
-  Future<bool> login(User user) async {
-    isLoadingLogin = true;
+  Future<Map<String, dynamic>> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    isLoadingRegister = true;
+    message = null;
     notifyListeners();
-    final userState = await authRepository.getUser();
-    if (user == userState) {
-      await authRepository.login();
+
+    try {
+      final result = await authRepository.register(
+        name: name,
+        email: email,
+        password: password,
+      );
+
+      if (!result['error']) {
+        message = "Registration successful";
+      } else {
+        message = result['message'];
+      }
+
+      return result;
+    } catch (e) {
+      message = "An error occurred: ${e.toString()}";
+      return {'error': true, 'message': message};
+    } finally {
+      isLoadingRegister = false;
+      notifyListeners();
     }
-    isLoggedIn = await authRepository.isLoggedIn();
+  }
+
+  Future<bool> login({required String email, required String password}) async {
+    isLoadingLogin = true;
+    message = null; //
+    notifyListeners();
+
+    try {
+      print('Login request: email=$email, password=$password');
+      final result =
+          await authRepository.login(email: email, password: password);
+
+      if (!result['error']) {
+        isLoggedIn = true;
+        message = "Login successful";
+      } else {
+        isLoggedIn = false;
+        message = result['message'];
+      }
+    } catch (e) {
+      isLoggedIn = false;
+      message = "An error occurred: ${e.toString()}";
+    }
+
     isLoadingLogin = false;
     notifyListeners();
     return isLoggedIn;
@@ -27,23 +74,32 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> logout() async {
     isLoadingLogout = true;
+    message = null;
     notifyListeners();
-    final logout = await authRepository.logout();
-    if (logout) {
-      await authRepository.deleteUser();
+
+    bool success = false;
+
+    try {
+      await authRepository.logout();
+      isLoggedIn = await authRepository.isLoggedIn();
+      if (!isLoggedIn) {
+        message = "Logout successful";
+        success = true;
+      } else {
+        message = "Logout failed";
+      }
+    } catch (e) {
+      message = "An error occurred during logout: ${e.toString()}";
     }
-    isLoggedIn = await authRepository.isLoggedIn();
+
     isLoadingLogout = false;
     notifyListeners();
-    return !isLoggedIn;
+
+    return success;
   }
 
-  Future<bool> saveUser(User user) async {
-    isLoadingRegister = true;
+  Future<void> checkLoginStatus() async {
+    isLoggedIn = await authRepository.isLoggedIn();
     notifyListeners();
-    final userState = await authRepository.saveUser(user);
-    isLoadingRegister = false;
-    notifyListeners();
-    return userState;
   }
 }

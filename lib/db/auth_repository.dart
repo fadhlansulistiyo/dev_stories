@@ -1,50 +1,54 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/api/api_service.dart';
 import '../data/model/user.dart';
 
 class AuthRepository {
-  final String stateKey = "state";
-  final String userKey = "user";
+  final ApiService apiService;
+
+  AuthRepository({required this.apiService});
 
   Future<bool> isLoggedIn() async {
     final preferences = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 2));
-    return preferences.getBool(stateKey) ?? false;
+    final token = preferences.getString('token');
+    return token != null && token.isNotEmpty;
   }
 
-  Future<bool> login() async {
-    final preferences = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 2));
-    return preferences.setBool(stateKey, true);
-  }
-
-  Future<bool> logout() async {
-    final preferences = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 2));
-    return preferences.setBool(stateKey, false);
-  }
-
-  Future<bool> saveUser(User user) async {
-    final preferences = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 2));
-    return preferences.setString(userKey, user.toJson());
-  }
-
-  Future<bool> deleteUser() async {
-    final preferences = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 2));
-    return preferences.setString(userKey, "");
-  }
-
-  Future<User?> getUser() async {
-    final preferences = await SharedPreferences.getInstance();
-    await Future.delayed(const Duration(seconds: 2));
-    final json = preferences.getString(userKey) ?? "";
-    User? user;
-    try {
-      user = User.fromJson(json);
-    } catch (e) {
-      user = null;
+  Future<Map<String, dynamic>> login({
+    required String email,
+    required String password,
+  }) async {
+    final result = await apiService.login(email: email, password: password);
+    if (!result['error']) {
+      final token = result['loginResult']['token'];
+      await _saveToken(token);
     }
-    return user;
+    return result;
+  }
+
+  Future<Map<String, dynamic>> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    final result = await apiService.register(
+      name: name,
+      email: email,
+      password: password,
+    );
+    return result;
+  }
+
+  Future<void> logout() async {
+    final preferences = await SharedPreferences.getInstance();
+    final token = preferences.getString('token');
+    print('token before delete: $token');
+    await preferences.remove('token');
+    final token2 = preferences.getString('token');
+    print('token now: $token2');
+  }
+
+  Future<void> _saveToken(String token) async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString('token', token);
   }
 }

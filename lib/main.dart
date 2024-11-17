@@ -1,9 +1,11 @@
+import 'package:dev_stories/data/api/api_service.dart';
 import 'package:dev_stories/provider/auth_provider.dart';
+import 'package:dev_stories/router/page_manager.dart';
 import 'package:dev_stories/router/router_delegate.dart';
 import 'package:dev_stories/style/theme.dart';
 import 'package:dev_stories/style/util.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'db/auth_repository.dart';
 
 void main() {
@@ -24,7 +26,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    final authRepository = AuthRepository();
+    final apiService = ApiService();
+    final authRepository = AuthRepository(apiService: apiService);
     authProvider = AuthProvider(authRepository);
     myRouterDelegate = MyRouterDelegate(authRepository);
   }
@@ -34,13 +37,23 @@ class _MyAppState extends State<MyApp> {
     TextTheme textTheme = createTextTheme(context, "Urbanist", "Urbanist");
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    return MaterialApp(
-      title: 'Dev Stories',
-      theme: theme.light(),
-      darkTheme: theme.dark(),
-      home: Router(
-        routerDelegate: myRouterDelegate,
-        backButtonDispatcher: RootBackButtonDispatcher(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => PageManager(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => authProvider,
+        )
+      ],
+      child: MaterialApp(
+        title: 'Dev Stories',
+        theme: theme.light(),
+        darkTheme: theme.dark(),
+        home: Router(
+          routerDelegate: myRouterDelegate,
+          backButtonDispatcher: RootBackButtonDispatcher(),
+        ),
       ),
     );
   }

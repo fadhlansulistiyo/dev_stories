@@ -8,15 +8,23 @@ class User {
   User({
     this.name,
     this.email,
-    this.password,
+    required this.password,
+  });
+
+  User.register({
+    required this.name,
+    required this.email,
+    required this.password,
+  });
+
+  User.login({
+    required this.email,
+    required this.password,
   });
 
   @override
-  String toString() => 'User(name: $name, email: $email, password: $password)';
+  String toString() => 'User(email: $email, password: $password)';
 
-  /*
-  * objek User mampu mengembalikan data Map ataupun JSON
-  * */
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -37,19 +45,15 @@ class User {
 
   factory User.fromJson(String source) => User.fromMap(json.decode(source));
 
-  /*
-  * objek User mampu dibandingkan dengan objek User lainnya
-  * */
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is User &&
-        other.name == name &&
         other.email == email &&
         other.password == password;
   }
 
   @override
-  int get hashCode => Object.hash(name, email, password);
+  int get hashCode => Object.hash(email, password);
 }

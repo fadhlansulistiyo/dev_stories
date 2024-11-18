@@ -105,19 +105,13 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                       ? Theme.of(context).disabledColor
                       : Theme.of(context).colorScheme.primary,
                 ),
-                child: isUploading
-                    ? CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      )
-                    : Text(
-                        "Upload",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
+                child: Text(
+                  "Upload",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
               )
             ],
           ),
@@ -129,7 +123,6 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   _onUpload() async {
     final uploadProvider = context.read<AddStoryProvider>();
     final pageManager = context.read<PageManager>();
-    uploadProvider.setIsUploading(true);
 
     final imagePath = uploadProvider.imagePath;
     final imageFile = uploadProvider.imageFile;
@@ -151,6 +144,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
       return;
     }
 
+    uploadProvider.setIsUploading(true);
     showDialog(
       context: context,
       barrierDismissible: false,

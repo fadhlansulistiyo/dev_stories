@@ -26,6 +26,11 @@ class AddStoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setIsUploading(bool value) {
+    isUploading = value;
+    notifyListeners();
+  }
+
   Future<void> postStory(
       List<int> bytes, String fileName, String description) async {
     try {

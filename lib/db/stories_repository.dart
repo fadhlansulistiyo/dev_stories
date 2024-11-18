@@ -15,7 +15,4 @@ class StoriesRepository {
     return await apiService.getDetailStory(id);
   }
 
-  /*
-  * TODO: add story API call
-  */
 }

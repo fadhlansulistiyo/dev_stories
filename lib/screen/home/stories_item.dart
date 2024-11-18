@@ -30,12 +30,10 @@ class StoriesItem extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Row(
                 children: [
-                  ClipOval(
-                    child: Image.network(
-                      'https://via.placeholder.com/150',
-                      width: 40,
-                      height: 40,
-                      fit: BoxFit.cover,
+                  const ClipOval(
+                    child: Icon(
+                      Icons.account_circle,
+                      size: 40,
                     ),
                   ),
                   const SizedBox(width: 12),

@@ -13,11 +13,10 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Loading Splash...',
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
+            Image.asset(
+              'assets/dicoding_story_logo.png',
+              width: 250,
+            )
           ],
         ),
       ),

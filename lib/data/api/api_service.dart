@@ -15,15 +15,6 @@ class ApiService {
   static const String _getDetailStory = 'stories/';
   static const String _addStory = 'stories';
 
-  Future<Map<String, String>> _getHeaders() async {
-    final preferences = await SharedPreferences.getInstance();
-    final token = preferences.getString('token') ?? '';
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-  }
-
   Future<Map<String, dynamic>> register({
     required String name,
     required String email,
@@ -124,6 +115,15 @@ class ApiService {
     } catch (e) {
       throw Exception('Upload failed with error: $e');
     }
+  }
+
+  Future<Map<String, String>> _getHeaders() async {
+    final preferences = await SharedPreferences.getInstance();
+    final token = preferences.getString('token') ?? '';
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
   }
 
   Future<Map<String, String>> _getMultipartHeaders() async {

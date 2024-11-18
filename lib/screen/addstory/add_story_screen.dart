@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dev_stories/screen/addstory/upload_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,6 +129,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   _onUpload() async {
     final uploadProvider = context.read<AddStoryProvider>();
     final pageManager = context.read<PageManager>();
+    uploadProvider.setIsUploading(true);
 
     final imagePath = uploadProvider.imagePath;
     final imageFile = uploadProvider.imageFile;
@@ -149,9 +151,22 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
       return;
     }
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return UploadDialog(
+          onComplete: () {
+            widget.onPost();
+          },
+        );
+      },
+    );
+
+    await Future.delayed(const Duration(seconds: 1));
+
     final fileName = imageFile.name;
     final bytes = await imageFile.readAsBytes();
-
     final newBytes = await uploadProvider.compressImage(bytes);
     await uploadProvider.postStory(newBytes, fileName, description);
 
@@ -163,11 +178,9 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
       pageManager.returnData("success");
     }
 
-    scaffoldMessengerState.showSnackBar(
-      SnackBar(content: Text(uploadProvider.message)),
-    );
-
-    widget.onPost();
+    setState(() {
+      uploadProvider.setIsUploading(false);
+    });
   }
 
   _onGalleryView() async {
@@ -224,9 +237,6 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   @override
   void dispose() {
     _descriptionController.dispose();
-    final uploadProvider = context.read<AddStoryProvider>();
-    uploadProvider.setImageFile(null);
-    uploadProvider.setImagePath(null);
     super.dispose();
   }
 }

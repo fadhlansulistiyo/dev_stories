@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import '../data/model/user.dart';
 import '../db/auth_repository.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -51,7 +50,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      print('Login request: email=$email, password=$password');
       final result =
           await authRepository.login(email: email, password: password);
 

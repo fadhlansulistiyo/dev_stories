@@ -1,5 +1,7 @@
 import 'package:dev_stories/data/api/api_service.dart';
+import 'package:dev_stories/db/stories_repository.dart';
 import 'package:dev_stories/provider/auth_provider.dart';
+import 'package:dev_stories/provider/stories_provider.dart';
 import 'package:dev_stories/router/page_manager.dart';
 import 'package:dev_stories/router/router_delegate.dart';
 import 'package:dev_stories/style/theme.dart';
@@ -44,7 +46,20 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(
           create: (context) => authProvider,
-        )
+        ),
+        Provider(
+          create: (context) => ApiService(),
+        ),
+        Provider(
+          create: (context) => StoriesRepository(
+            apiService: context.read<ApiService>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => StoriesProvider(
+            storiesRepository: context.read<StoriesRepository>(),
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Dev Stories',

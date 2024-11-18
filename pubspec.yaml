@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.3.3
   flutter_web_plugins:
     sdk: flutter
+  intl: ^0.20.0
 
 dev_dependencies:
   flutter_test:

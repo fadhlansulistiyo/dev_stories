@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/api/api_service.dart';
-import '../data/model/user.dart';
 
 class AuthRepository {
   final ApiService apiService;
@@ -40,11 +39,7 @@ class AuthRepository {
 
   Future<void> logout() async {
     final preferences = await SharedPreferences.getInstance();
-    final token = preferences.getString('token');
-    print('token before delete: $token');
     await preferences.remove('token');
-    final token2 = preferences.getString('token');
-    print('token now: $token2');
   }
 
   Future<void> _saveToken(String token) async {

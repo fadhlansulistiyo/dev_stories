@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dev_stories/data/model/detail_story.dart';
+import 'package:dev_stories/data/model/list_story.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,38 +60,27 @@ class ApiService {
     });
   }
 
-  Future<List<dynamic>> getAllStories() {
+  Future<ListStory> getAllStories() {
     return _handleApiCall(() async {
       final headers = await _getHeaders();
       final url = Uri.parse('$_baseUrl$_getStories');
       final response = await http.get(url, headers: headers);
-      return _processResponse<List<dynamic>>(
-          response, (data) => data['listStory']);
+      return _processResponse(response, (data) => ListStory.fromJson(data));
     });
   }
 
-  Future<List<dynamic>> getDetailStory(String id) {
+  Future<DetailStoryResult> getDetailStory(String id) {
     return _handleApiCall(() async {
       final headers = await _getHeaders();
       final url = Uri.parse('$_baseUrl$_getDetailStory$id');
       final response = await http.get(url, headers: headers);
-      return _processResponse<List<dynamic>>(
-          response, (data) => data['listStory']);
+      return _processResponse(response, (data) => DetailStoryResult.fromJson(data));
     });
   }
 
-  Future<Map<String, dynamic>> addStory(Map<String, dynamic> storyData) {
-    return _handleApiCall(() async {
-      final headers = await _getHeaders();
-      final url = Uri.parse('$_baseUrl$_addStory');
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(storyData),
-      );
-      return _processResponse<Map<String, dynamic>>(response, (data) => data);
-    });
-  }
+  /*
+  * TODO: add story API call
+  */
 
   Future<T> _handleApiCall<T>(Future<T> Function() apiCall) async {
     try {

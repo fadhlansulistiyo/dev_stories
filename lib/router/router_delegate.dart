@@ -74,12 +74,18 @@ class MyRouterDelegate extends RouterDelegate
                 isLoggedIn = false;
                 notifyListeners();
               },
+              onDetail: (String id) {
+                selectedStory = id;
+                notifyListeners();
+              },
             )
         ),
         if (selectedStory != null)
           MaterialPage(
             key: ValueKey("DetailStoryPage-$selectedStory"),
-            child: DetailScreen(),
+            child: DetailScreen(
+              id: selectedStory!,
+            ),
           ),
         if (isAddStory)
           MaterialPage(

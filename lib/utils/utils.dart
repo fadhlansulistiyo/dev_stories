@@ -1,9 +1,13 @@
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart' as tz;
 
-extension DateTimeFormatter on DateTime {
-  String toFormattedString() {
-    final DateFormat formatter = DateFormat('dd MMM yyyy | HH:mm');
-    return formatter.format(this);
-  }
+String formatWithTimeZone(dynamic dateInput, {String targetTimeZone = "Asia/Jakarta"}) {
+  final utcDate = (dateInput is String)
+      ? DateTime.parse(dateInput).toUtc()
+      : (dateInput as DateTime).toUtc();
+
+  final tzDate = tz.TZDateTime.from(utcDate, tz.getLocation(targetTimeZone));
+
+  final formatter = DateFormat('dd MMM yyyy | HH:mm');
+  return formatter.format(tzDate);
 }
-

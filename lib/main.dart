@@ -10,9 +10,16 @@ import 'package:dev_stories/style/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'db/auth_repository.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  initializeTimeZones();
   runApp(const MyApp());
+}
+
+void initializeTimeZones() {
+  tz.initializeTimeZones();
 }
 
 class MyApp extends StatefulWidget {

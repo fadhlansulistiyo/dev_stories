@@ -87,7 +87,7 @@ class _DetailScreenState extends State<DetailScreen> {
           const SizedBox(height: 8),
 
           Text(
-            'Created At: ${story.createdAt.toFormattedString()}',
+            'Created At: ${formatWithTimeZone(story.createdAt)}',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade600,

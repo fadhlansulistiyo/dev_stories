@@ -46,7 +46,7 @@ class StoriesItem extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    createdAt.toFormattedString(),
+                    formatWithTimeZone(createdAt),
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 12,

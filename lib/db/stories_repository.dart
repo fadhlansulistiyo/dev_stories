@@ -1,6 +1,5 @@
 import 'package:dev_stories/data/api/api_service.dart';
 import 'package:dev_stories/data/model/detail_story.dart';
-
 import '../data/model/list_story.dart';
 
 class StoriesRepository {

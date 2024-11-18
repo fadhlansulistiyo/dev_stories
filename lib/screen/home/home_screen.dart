@@ -61,9 +61,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<StoriesProvider>(
       builder: (context, value, _) {
         return switch (value.storiesState) {
+
           LoadingState() => const Center(
               child: CircularProgressIndicator(),
             ),
+
           LoadedState(data: var listStory) => ListView.builder(
               itemCount: listStory.length,
               itemBuilder: (context, index) {
@@ -77,9 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
+
           ErrorState(error: var message) => Center(
               child: _buildError(message),
             ),
+
           _ => const SizedBox()
         };
       },

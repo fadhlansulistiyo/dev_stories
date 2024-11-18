@@ -16,7 +16,8 @@ class SplashScreen extends StatelessWidget {
             Image.asset(
               'assets/dicoding_story_logo.png',
               width: 250,
-            )
+            ),
+            const Text('Dev Stories'),
           ],
         ),
       ),

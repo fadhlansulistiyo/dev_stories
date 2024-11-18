@@ -4,6 +4,8 @@ import 'package:dev_stories/data/model/detail_story.dart';
 import 'package:dev_stories/data/model/list_story.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../model/upload_response.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiService {
   static const String _baseUrl = 'https://story-api.dicoding.dev/v1/';
@@ -74,13 +76,64 @@ class ApiService {
       final headers = await _getHeaders();
       final url = Uri.parse('$_baseUrl$_getDetailStory$id');
       final response = await http.get(url, headers: headers);
-      return _processResponse(response, (data) => DetailStoryResult.fromJson(data));
+      return _processResponse(
+          response, (data) => DetailStoryResult.fromJson(data));
     });
   }
 
-  /*
-  * TODO: add story API call
-  */
+  Future<UploadResponse> uploadStory(
+      List<int> bytes,
+      String fileName,
+      String description, {
+        double? lat,
+        double? lon,
+      }) async {
+    const String url = '$_baseUrl$_addStory';
+    final uri = Uri.parse(url);
+    final headers = await _getMultipartHeaders();
+
+    var request = http.MultipartRequest('POST', uri);
+
+    final multiPartFile = http.MultipartFile.fromBytes(
+      "photo",
+      bytes,
+      filename: fileName,
+    );
+    request.files.add(multiPartFile);
+
+    request.fields['description'] = description;
+    if (lat != null) request.fields['lat'] = lat.toString();
+    if (lon != null) request.fields['lon'] = lon.toString();
+
+    request.headers.addAll(headers);
+
+    try {
+      final http.StreamedResponse streamedResponse = await request.send();
+      final int statusCode = streamedResponse.statusCode;
+      final Uint8List responseList = await streamedResponse.stream.toBytes();
+      final String responseData = String.fromCharCodes(responseList);
+
+      if (statusCode == 201) {
+        final responseMap = jsonDecode(responseData) as Map<String, dynamic>;
+        return UploadResponse.fromMap(responseMap);
+      } else {
+        final responseMap = jsonDecode(responseData) as Map<String, dynamic>;
+        final String errorMessage = responseMap['message'] ?? 'Upload failed';
+        throw Exception('Error $statusCode: $errorMessage');
+      }
+    } catch (e) {
+      throw Exception('Upload failed with error: $e');
+    }
+  }
+
+  Future<Map<String, String>> _getMultipartHeaders() async {
+    final preferences = await SharedPreferences.getInstance();
+    final token = preferences.getString('token') ?? '';
+    return {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    };
+  }
 
   Future<T> _handleApiCall<T>(Future<T> Function() apiCall) async {
     try {

@@ -78,6 +78,10 @@ class MyRouterDelegate extends RouterDelegate
                 selectedStory = id;
                 notifyListeners();
               },
+              toAddStoryScreen: () {
+                isAddStory = true;
+                notifyListeners();
+              },
             )
         ),
         if (selectedStory != null)
@@ -90,7 +94,12 @@ class MyRouterDelegate extends RouterDelegate
         if (isAddStory)
           MaterialPage(
             key: const ValueKey("AddStoryPage"),
-            child: AddStoryScreen(),
+            child: AddStoryScreen(
+              onPost: () {
+                isAddStory = false;
+                notifyListeners();
+              },
+            ),
           ),
       ];
 

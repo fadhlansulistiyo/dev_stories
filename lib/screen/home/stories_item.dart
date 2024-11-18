@@ -77,13 +77,11 @@ class StoriesItem extends StatelessWidget {
                 if (loadingProgress == null) {
                   return child;
                 }
-                return const Center(
-                  child: SizedBox(
-                    width: 150,
-                    height: 100,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                return Center(
+                  child: Container(
+                    width: double.infinity,
+                    height: 250,
+                    color: Colors.grey
                   ),
                 );
               },
@@ -95,6 +93,8 @@ class StoriesItem extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

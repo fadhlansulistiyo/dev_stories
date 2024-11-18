@@ -46,7 +46,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> login({required String email, required String password}) async {
     isLoadingLogin = true;
-    message = null; //
+    message = null;
     notifyListeners();
 
     try {

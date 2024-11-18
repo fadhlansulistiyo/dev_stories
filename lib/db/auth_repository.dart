@@ -39,6 +39,7 @@ class AuthRepository {
 
   Future<void> logout() async {
     final preferences = await SharedPreferences.getInstance();
+    await Future.delayed(const Duration(seconds: 2));
     await preferences.remove('token');
   }
 

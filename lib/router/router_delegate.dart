@@ -3,6 +3,7 @@ import 'package:dev_stories/screen/detail/detail_screen.dart';
 import 'package:dev_stories/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../db/auth_repository.dart';
+import '../screen/detail/maps_screen.dart';
 import '../screen/login/login_screen.dart';
 import '../screen/register/register_screen.dart';
 import '../screen/splash/splash_screen.dart';
@@ -24,6 +25,8 @@ class MyRouterDelegate extends RouterDelegate
 
   List<Page> historyStack = [];
   String? selectedStory;
+  double? locationLat;
+  double? locationLon;
   bool? isLoggedIn;
   bool? isUnknown;
   bool isRegister = false;
@@ -82,13 +85,25 @@ class MyRouterDelegate extends RouterDelegate
                 isAddStory = true;
                 notifyListeners();
               },
-            )
-        ),
+            )),
         if (selectedStory != null)
           MaterialPage(
             key: ValueKey("DetailStoryPage-$selectedStory"),
             child: DetailScreen(
               id: selectedStory!,
+              toStoryLocation: (double lat, double lon) {
+                locationLat = lat;
+                locationLon = lon;
+                notifyListeners();
+              },
+            ),
+          ),
+        if (locationLat != null && locationLon != null)
+          MaterialPage(
+            key: ValueKey("MapsScreen-$locationLat-$locationLon"),
+            child: MapsScreen(
+              lat: locationLat!,
+              lon: locationLon!,
             ),
           ),
         if (isAddStory)
@@ -124,11 +139,21 @@ class MyRouterDelegate extends RouterDelegate
           return false;
         }
 
-        isRegister = false;
-        selectedStory = null;
-        isAddStory = false;
-        notifyListeners();
+        if (route.settings is MaterialPage) {
+          final pageKey = (route.settings as MaterialPage).key;
+          if (pageKey == ValueKey("MapsScreen-$locationLat-$locationLon")) {
+            locationLat = null;
+            locationLon = null;
+          } else if (pageKey == ValueKey("DetailStoryPage-$selectedStory")) {
+            selectedStory = null;
+          } else if (pageKey == const ValueKey("AddStoryPage")) {
+            isAddStory = false;
+          } else if (pageKey == const ValueKey("RegisterPage")) {
+            isRegister = false;
+          }
+        }
 
+        notifyListeners();
         return true;
       },
     );

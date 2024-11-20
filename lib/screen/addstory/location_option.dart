@@ -1,0 +1,1 @@
+enum LocationOption { current, map }

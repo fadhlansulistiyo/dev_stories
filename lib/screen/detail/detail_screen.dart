@@ -1,6 +1,5 @@
 import 'package:dev_stories/data/model/detail_story.dart';
 import 'package:dev_stories/provider/stories_provider.dart';
-import 'package:dev_stories/screen/detail/maps_screen.dart';
 import 'package:dev_stories/screen/detail/story_image_widget.dart';
 import 'package:dev_stories/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import '../../static/detail_story_state.dart';
 
 class DetailScreen extends StatefulWidget {
   final String id;
-  final Function(double lat, double lon) toStoryLocation;
+  final Function(LatLng latLng) toStoryLocation;
 
   const DetailScreen(
       {super.key, required this.id, required this.toStoryLocation});
@@ -150,7 +149,7 @@ class _DetailScreenState extends State<DetailScreen> {
           ElevatedButton(
             onPressed: () {
               if (story.lat != null && story.lon != null) {
-                widget.toStoryLocation(story.lat!, story.lon!);
+                widget.toStoryLocation(LatLng(story.lat!, story.lon!));
               }
               return;
             },

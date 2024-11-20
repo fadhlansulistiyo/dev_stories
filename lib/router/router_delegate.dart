@@ -2,6 +2,7 @@ import 'package:dev_stories/screen/addstory/add_story_screen.dart';
 import 'package:dev_stories/screen/detail/detail_screen.dart';
 import 'package:dev_stories/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../db/auth_repository.dart';
 import '../screen/detail/maps_screen.dart';
 import '../screen/login/login_screen.dart';
@@ -25,8 +26,7 @@ class MyRouterDelegate extends RouterDelegate
 
   List<Page> historyStack = [];
   String? selectedStory;
-  double? locationLat;
-  double? locationLon;
+  LatLng? latLng;
   bool? isLoggedIn;
   bool? isUnknown;
   bool isRegister = false;
@@ -91,19 +91,17 @@ class MyRouterDelegate extends RouterDelegate
             key: ValueKey("DetailStoryPage-$selectedStory"),
             child: DetailScreen(
               id: selectedStory!,
-              toStoryLocation: (double lat, double lon) {
-                locationLat = lat;
-                locationLon = lon;
+              toStoryLocation: (LatLng latLng) {
+                this.latLng = latLng;
                 notifyListeners();
               },
             ),
           ),
-        if (locationLat != null && locationLon != null)
+        if (latLng != null)
           MaterialPage(
-            key: ValueKey("MapsScreen-$locationLat-$locationLon"),
+            key: ValueKey("MapsScreen-$latLng"),
             child: MapsScreen(
-              lat: locationLat!,
-              lon: locationLon!,
+              latLng: latLng!,
             ),
           ),
         if (isAddStory)
@@ -141,9 +139,8 @@ class MyRouterDelegate extends RouterDelegate
 
         if (route.settings is MaterialPage) {
           final pageKey = (route.settings as MaterialPage).key;
-          if (pageKey == ValueKey("MapsScreen-$locationLat-$locationLon")) {
-            locationLat = null;
-            locationLon = null;
+          if (pageKey == ValueKey("MapsScreen-$latLng")) {
+            latLng = null;
           } else if (pageKey == ValueKey("DetailStoryPage-$selectedStory")) {
             selectedStory = null;
           } else if (pageKey == const ValueKey("AddStoryPage")) {

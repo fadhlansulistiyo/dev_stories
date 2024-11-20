@@ -4,10 +4,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 
 class MapsScreen extends StatefulWidget {
-  final double lat;
-  final double lon;
+  final LatLng latLng;
 
-  const MapsScreen({super.key, required this.lat, required this.lon});
+  const MapsScreen({super.key, required this.latLng});
 
   @override
   State<MapsScreen> createState() => _MapsScreenState();
@@ -24,8 +23,8 @@ class _MapsScreenState extends State<MapsScreen> {
   @override
   void initState() {
     super.initState();
-    lat = widget.lat;
-    long = widget.lon;
+    lat = widget.latLng.latitude;
+    long = widget.latLng.longitude;
     storyLocation = LatLng(lat, long);
   }
 

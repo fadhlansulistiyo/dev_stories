@@ -53,10 +53,10 @@ class ApiService {
     });
   }
 
-  Future<ListStory> getAllStories([int page = 1, int size = 10, int location = 1]) {
+  Future<ListStory> getAllStories([int page = 1, int size = 10]) {
     return _handleApiCall(() async {
       final headers = await _getHeaders();
-      final url = Uri.parse('$_baseUrl$_getStories?page=$page&size=$size&location=$location');
+      final url = Uri.parse('$_baseUrl$_getStories?page=$page&size=$size&location=0');
       final response = await http.get(url, headers: headers);
       return _processResponse(response, (data) => ListStory.fromJson(data));
     });

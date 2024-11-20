@@ -7,8 +7,8 @@ class StoriesRepository {
 
   StoriesRepository({required this.apiService});
 
-  Future<ListStory> getAllStories() async {
-    return await apiService.getAllStories();
+  Future<ListStory> getAllStories(int? pageItems, int sizeItem) async {
+    return await apiService.getAllStories(pageItems!, sizeItem);
   }
 
   Future<DetailStoryResult> getDetailStory(String id) async {

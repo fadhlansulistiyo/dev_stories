@@ -22,15 +22,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
+    final storiesProvider = context.read<StoriesProvider>();
 
-    Future.microtask(() {
-      if (mounted) {
-        context.read<StoriesProvider>().getAllStories();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        if (storiesProvider.pageItems != null) {
+          storiesProvider.getAllStories();
+        }
       }
     });
+
+    Future.microtask(() async => storiesProvider.getAllStories());
   }
 
   @override
@@ -77,24 +85,33 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<StoriesProvider>(
       builder: (context, value, _) {
         return switch (value.storiesState) {
-
           LoadingState() => const Center(
               child: CircularProgressIndicator(),
             ),
-
-          LoadedState(data: var listStory) => ListView.builder(
-              itemCount: listStory.length,
+          LoadedState(data: var _) => ListView.builder(
+              controller: scrollController,
+              itemCount: value.loadedStories.length +
+                  (value.pageItems != null ? 1 : 0),
               itemBuilder: (context, index) {
-                final stories = listStory[index];
+                if (index == value.loadedStories.length &&
+                    value.pageItems != null) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                final stories = value.loadedStories[index];
                 return StoriesItem(
-                    name: stories.name,
-                    description: stories.description,
-                    photoUrl: stories.photoUrl,
-                    createdAt: stories.createdAt,
-                    onTapped: () => widget.onDetail(stories.id));
+                  name: stories.name,
+                  description: stories.description,
+                  photoUrl: stories.photoUrl,
+                  createdAt: stories.createdAt,
+                  onTapped: () => widget.onDetail(stories.id),
+                );
               },
             ),
-
           ErrorState(error: var message) => Center(
               child: _buildError(message),
             ),
@@ -117,7 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   Widget _buildError(String message) {
     return Center(
       child: Column(
@@ -137,5 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void _retryFetchingData() {
     final provider = context.read<StoriesProvider>();
     provider.getAllStories();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

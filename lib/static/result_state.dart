@@ -1,4 +1,4 @@
-import 'package:dev_stories/data/model/list_story.dart';
+import 'package:dev_stories/data/model/story.dart';
 
 sealed class ResultState {}
 
@@ -13,7 +13,7 @@ class ErrorState extends ResultState {
 }
 
 class LoadedState extends ResultState {
-  final List<ListStoryElement> data;
+  final List<Story> data;
 
   LoadedState(this.data);
 }

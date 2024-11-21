@@ -1,39 +1,3 @@
-// To parse this JSON data, do
-//
-//     final detailStory = detailStoryFromJson(jsonString);
-
-import 'dart:convert';
-
-DetailStoryResult detailStoryFromJson(String str) =>
-    DetailStoryResult.fromJson(json.decode(str));
-
-String detailStoryToJson(DetailStoryResult data) => json.encode(data.toJson());
-
-class DetailStoryResult {
-  bool error;
-  String message;
-  DetailStory story;
-
-  DetailStoryResult({
-    required this.error,
-    required this.message,
-    required this.story,
-  });
-
-  factory DetailStoryResult.fromJson(Map<String, dynamic> json) =>
-      DetailStoryResult(
-        error: json["error"],
-        message: json["message"],
-        story: DetailStory.fromJson(json["story"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "error": error,
-        "message": message,
-        "story": story.toJson(),
-      };
-}
-
 class DetailStory {
   String id;
   String name;

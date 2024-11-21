@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dev_stories/data/model/detail_story.dart';
-import 'package:dev_stories/data/model/list_story.dart';
+import 'package:dev_stories/data/model/list_story_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../model/detail_story_response.dart';
 import '../model/upload_response.dart';
 import 'package:flutter/foundation.dart';
 
@@ -53,22 +53,22 @@ class ApiService {
     });
   }
 
-  Future<ListStory> getAllStories([int page = 1, int size = 10]) {
+  Future<ListStoryResponse> getAllStories([int page = 1, int size = 10]) {
     return _handleApiCall(() async {
       final headers = await _getHeaders();
       final url = Uri.parse('$_baseUrl$_getStories?page=$page&size=$size&location=0');
       final response = await http.get(url, headers: headers);
-      return _processResponse(response, (data) => ListStory.fromJson(data));
+      return _processResponse(response, (data) => ListStoryResponse.fromJson(data));
     });
   }
 
-  Future<DetailStoryResult> getDetailStory(String id) {
+  Future<DetailStoryResponse> getDetailStory(String id) {
     return _handleApiCall(() async {
       final headers = await _getHeaders();
       final url = Uri.parse('$_baseUrl$_getDetailStory$id');
       final response = await http.get(url, headers: headers);
       return _processResponse(
-          response, (data) => DetailStoryResult.fromJson(data));
+          response, (data) => DetailStoryResponse.fromJson(data));
     });
   }
 

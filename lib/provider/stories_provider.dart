@@ -1,8 +1,8 @@
-import 'package:dev_stories/data/model/list_story.dart';
 import 'package:dev_stories/db/stories_repository.dart';
 import 'package:dev_stories/static/detail_story_state.dart';
 import 'package:dev_stories/static/result_state.dart';
 import 'package:flutter/material.dart';
+import '../data/model/story.dart';
 
 class StoriesProvider extends ChangeNotifier {
   final StoriesRepository storiesRepository;
@@ -15,8 +15,8 @@ class StoriesProvider extends ChangeNotifier {
   DetailStoryState _detailState = DetailNoneState();
   DetailStoryState get detailState => _detailState;
 
-  List<ListStoryElement> _loadedStories = [];
-  List<ListStoryElement> get loadedStories => _loadedStories;
+  List<Story> _loadedStories = [];
+  List<Story> get loadedStories => _loadedStories;
 
   int? pageItems = 1;
   int sizeItems = 10;

@@ -106,7 +106,7 @@ class ApiService {
 
       if (statusCode == 201) {
         final responseMap = jsonDecode(responseData) as Map<String, dynamic>;
-        return UploadResponse.fromMap(responseMap);
+        return UploadResponse.fromJson(responseMap);
       } else {
         final responseMap = jsonDecode(responseData) as Map<String, dynamic>;
         final String errorMessage = responseMap['message'] ?? 'Upload failed';

@@ -1,3 +1,8 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'detail_story.g.dart';
+
+@JsonSerializable()
 class DetailStory {
   String id;
   String name;
@@ -17,23 +22,7 @@ class DetailStory {
     this.lon,
   });
 
-  factory DetailStory.fromJson(Map<String, dynamic> json) => DetailStory(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"],
-        photoUrl: json["photoUrl"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        lat: json["lat"]?.toDouble(),
-        lon: json["lon"]?.toDouble(),
-      );
+  factory DetailStory.fromJson(Map<String, dynamic> json) => _$DetailStoryFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
-        "photoUrl": photoUrl,
-        "createdAt": createdAt.toIso8601String(),
-        "lat": lat,
-        "lon": lon,
-      };
+  Map<String, dynamic> toJson() => _$DetailStoryToJson(this);
 }

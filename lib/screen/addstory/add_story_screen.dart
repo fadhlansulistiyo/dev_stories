@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../../provider/add_story_provider.dart';
+import '../../provider/stories_provider.dart';
 import '../../router/page_manager.dart';
 import 'location_option.dart';
 

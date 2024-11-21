@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final result = await pageManager.waitForResult();
 
     if (result == "success") {
-      await storiesProvider.getAllStories();
+      await storiesProvider.getAllStories(reset: true);
     }
   }
 

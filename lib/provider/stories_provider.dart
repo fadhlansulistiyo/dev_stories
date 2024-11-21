@@ -21,8 +21,15 @@ class StoriesProvider extends ChangeNotifier {
   int? pageItems = 1;
   int sizeItems = 10;
 
-  Future<void> getAllStories() async {
+  Future<void> getAllStories({bool reset = false}) async {
     try {
+      if (reset) {
+        _loadedStories = [];
+        pageItems = 1;
+        _storiesState = LoadingState();
+        notifyListeners();
+      }
+
       if (pageItems == 1) {
         _storiesState = LoadingState();
         notifyListeners();
@@ -39,7 +46,6 @@ class StoriesProvider extends ChangeNotifier {
         } else {
           _loadedStories = List.from(_loadedStories)..addAll(stories.listStory);
         }
-
 
         if (stories.listStory.length < sizeItems) {
           pageItems = null;

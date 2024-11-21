@@ -35,10 +35,11 @@ class StoriesProvider extends ChangeNotifier {
         _storiesState = ErrorState(stories.message);
       } else {
         if (pageItems == 1) {
-          _loadedStories = stories.listStory;
+          _loadedStories = List.from(stories.listStory);
         } else {
-          _loadedStories.addAll(stories.listStory);
+          _loadedStories = List.from(_loadedStories)..addAll(stories.listStory);
         }
+
 
         if (stories.listStory.length < sizeItems) {
           pageItems = null;

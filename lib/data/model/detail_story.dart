@@ -1,28 +1,20 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'detail_story.freezed.dart';
 part 'detail_story.g.dart';
 
-@JsonSerializable()
-class DetailStory {
-  String id;
-  String name;
-  String description;
-  String photoUrl;
-  DateTime createdAt;
-  double? lat;
-  double? lon;
+@freezed
+class DetailStory with _$DetailStory {
+  const factory DetailStory({
+    required String id,
+    required String name,
+    required String description,
+    required String photoUrl,
+    required DateTime createdAt,
+    double? lat,
+    double? lon,
+  }) = _DetailStory;
 
-  DetailStory({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.photoUrl,
-    required this.createdAt,
-    this.lat,
-    this.lon,
-  });
-
-  factory DetailStory.fromJson(Map<String, dynamic> json) => _$DetailStoryFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DetailStoryToJson(this);
+  factory DetailStory.fromJson(Map<String, dynamic> json) =>
+      _$DetailStoryFromJson(json);
 }

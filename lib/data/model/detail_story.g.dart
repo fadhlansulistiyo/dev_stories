@@ -6,7 +6,8 @@ part of 'detail_story.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DetailStory _$DetailStoryFromJson(Map<String, dynamic> json) => DetailStory(
+_$DetailStoryImpl _$$DetailStoryImplFromJson(Map<String, dynamic> json) =>
+    _$DetailStoryImpl(
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
@@ -16,7 +17,7 @@ DetailStory _$DetailStoryFromJson(Map<String, dynamic> json) => DetailStory(
       lon: (json['lon'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$DetailStoryToJson(DetailStory instance) =>
+Map<String, dynamic> _$$DetailStoryImplToJson(_$DetailStoryImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

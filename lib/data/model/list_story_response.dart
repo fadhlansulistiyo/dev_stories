@@ -1,22 +1,17 @@
 import 'package:dev_stories/data/model/story.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'list_story_response.freezed.dart';
 part 'list_story_response.g.dart';
 
-@JsonSerializable()
-class ListStoryResponse {
-  bool error;
-  String message;
-  List<Story> listStory;
+@freezed
+class ListStoryResponse with _$ListStoryResponse {
+  const factory ListStoryResponse({
+    required bool error,
+    required String message,
+    required List<Story> listStory,
+  }) = _ListStoryResponse;
 
-  ListStoryResponse({
-    required this.error,
-    required this.message,
-    required this.listStory,
-  });
-
-  factory ListStoryResponse.fromJson(json) => _$ListStoryResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ListStoryResponseToJson(this);
+  factory ListStoryResponse.fromJson(Map<String, dynamic> json) =>
+      _$ListStoryResponseFromJson(json);
 }
-

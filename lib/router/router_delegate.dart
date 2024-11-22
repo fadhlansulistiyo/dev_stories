@@ -1,4 +1,5 @@
 import 'package:dev_stories/screen/addstory/add_story_screen.dart';
+import 'package:dev_stories/screen/addstory/maps_pick_location.dart';
 import 'package:dev_stories/screen/detail/detail_screen.dart';
 import 'package:dev_stories/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,12 @@ class MyRouterDelegate extends RouterDelegate
   List<Page> historyStack = [];
   String? selectedStory;
   LatLng? latLng;
+  LatLng? selectedLatLng;
   bool? isLoggedIn;
   bool? isUnknown;
   bool isRegister = false;
   bool isAddStory = false;
+  bool isChooseLocationFromMap = false;
 
   List<Page> get _splashStack => const [
         MaterialPage(
@@ -71,21 +74,22 @@ class MyRouterDelegate extends RouterDelegate
 
   List<Page> get _loggedInStack => [
         MaterialPage(
-            key: const ValueKey("HomePage"),
-            child: HomeScreen(
-              onLogout: () {
-                isLoggedIn = false;
-                notifyListeners();
-              },
-              onDetail: (String id) {
-                selectedStory = id;
-                notifyListeners();
-              },
-              toAddStoryScreen: () {
-                isAddStory = true;
-                notifyListeners();
-              },
-            )),
+          key: const ValueKey("HomePage"),
+          child: HomeScreen(
+            onLogout: () {
+              isLoggedIn = false;
+              notifyListeners();
+            },
+            onDetail: (String id) {
+              selectedStory = id;
+              notifyListeners();
+            },
+            toAddStoryScreen: () {
+              isAddStory = true;
+              notifyListeners();
+            },
+          ),
+        ),
         if (selectedStory != null)
           MaterialPage(
             key: ValueKey("DetailStoryPage-$selectedStory"),
@@ -112,8 +116,24 @@ class MyRouterDelegate extends RouterDelegate
                 isAddStory = false;
                 notifyListeners();
               },
+              onChooseLocation: (LatLng latLng) {
+                isChooseLocationFromMap = true;
+                selectedLatLng = latLng;
+                notifyListeners();
+              },
             ),
           ),
+        if (isChooseLocationFromMap)
+          MaterialPage(
+            key: ValueKey("ChooseLocationScreen-$selectedLatLng"),
+            child: MapsPickLocation(
+              latLng: selectedLatLng,
+              onChoose: (LatLng latLng) {
+                isChooseLocationFromMap = false;
+                notifyListeners();
+              },
+            ),
+          )
       ];
 
   @override
@@ -147,6 +167,9 @@ class MyRouterDelegate extends RouterDelegate
             isAddStory = false;
           } else if (pageKey == const ValueKey("RegisterPage")) {
             isRegister = false;
+          } else if (pageKey ==
+              ValueKey("ChooseLocationScreen-$selectedLatLng")) {
+            isChooseLocationFromMap = false;
           }
         }
 

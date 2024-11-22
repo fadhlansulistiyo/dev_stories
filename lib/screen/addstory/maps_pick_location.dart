@@ -1,13 +1,16 @@
+import 'package:dev_stories/screen/addstory/location_manager.dart';
 import 'package:dev_stories/screen/addstory/placemark_story_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' as geo;
+import 'package:provider/provider.dart';
 
 class MapsPickLocation extends StatefulWidget {
   final LatLng? latLng;
+  final Function(LatLng latLng) onChoose;
 
-  const MapsPickLocation({super.key, this.latLng});
+  const MapsPickLocation({super.key, this.latLng, required this.onChoose});
 
   @override
   State<MapsPickLocation> createState() => _MapsPickLocationState();
@@ -82,16 +85,21 @@ class _MapsPickLocationState extends State<MapsPickLocation> {
               left: 16,
               child: PlacemarkStoryWidget(
                 placemark: placemark!,
-                onChoose: () {
-                  if (_selectedLatLng != null) {
-                    Navigator.of(context).pop(_selectedLatLng);
-                  }
-                },
+                onChoose: () => _onChooseLocation(context),
               ),
             ),
         ],
       )),
     );
+  }
+
+  void _onChooseLocation(BuildContext context) async {
+    if (_selectedLatLng != null) {
+      widget.onChoose(_selectedLatLng!);
+
+      final locationManager = context.read<LocationManager>();
+      locationManager.returnData(_selectedLatLng!);
+    }
   }
 
   void onMyLocationButtonPress() async {

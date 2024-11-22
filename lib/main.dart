@@ -5,6 +5,7 @@ import 'package:dev_stories/provider/auth_provider.dart';
 import 'package:dev_stories/provider/stories_provider.dart';
 import 'package:dev_stories/router/page_manager.dart';
 import 'package:dev_stories/router/router_delegate.dart';
+import 'package:dev_stories/screen/addstory/location_manager.dart';
 import 'package:dev_stories/style/theme.dart';
 import 'package:dev_stories/style/util.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,9 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(
           create: (context) => PageManager(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LocationManager(),
         ),
         ChangeNotifierProvider(
           create: (context) => authProvider,
